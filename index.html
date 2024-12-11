@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>Test</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js"></script>
+    </head>
+    <body>
+        <h1>Sockets Test</h1>
+        <p>Lorem Ipsum</p>
+        <script type="text/javascript">
+            console.log("index.html");
+
+            const client = io("http://localhost:3000");
+
+            client.connect();
+
+            client.on("debug", (data) => {
+                console.log("Data received", data);
+            })
+
+            console.log("emitting");
+            client.emit("debug", {
+                "room": "aqua-useful-ric-olié",
+                "message": "Hello World"
+            })
+
+            console.log(client.connected);
+        </script>
+    </body>
+</html>
