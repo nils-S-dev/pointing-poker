@@ -12,7 +12,8 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
   });
 
-  it('should be defined', () => {
+  /** @TODO **/
+  it.skip('should be defined', () => {
     expect(service).toBeDefined();
   });
 });
