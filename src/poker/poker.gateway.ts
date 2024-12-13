@@ -46,6 +46,9 @@ export class RoomsGateway {
         }
     }
 
+    /**
+     * @TODO socket should only be in ONE room at the same time!!! MAKE SURE!
+     */
     @SubscribeMessage(Events.JOIN)
     async handleJoin(
         @MessageBody(Messages.ROOM) roomName: string,
@@ -54,7 +57,6 @@ export class RoomsGateway {
     ) {
         this.logger.log(`JOIN | User ${socket.id} (${userName}) joins room ${roomName}`)
 
-        /** @TODO handle socket logic directly in service -> but write tests beforehand. */
         await this.server.in(socket.id).socketsJoin(roomName)
 
         const room: Room = this.roomsService.join(roomName, {
