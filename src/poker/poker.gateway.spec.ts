@@ -7,6 +7,7 @@ import { RoomsService } from "./poker.service";
 import { RoomsController } from "./poker.controller";
 import { Room } from "./types/Room";
 import { User } from "./types/User";
+import { Procedure } from "./types/enum/Procedure";
 
 async function createNestApp(...providers: any): Promise<INestApplication> {
     const testingModule = await Test.createTestingModule({
@@ -54,7 +55,7 @@ describe('RoomsGateway', () => {
 
     app.listen(3000);
 
-    room = service.create();
+    room = service.create(Procedure.FIBONACCI);
 
     ioClient.connect();
 

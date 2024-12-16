@@ -2,6 +2,7 @@ import { Dispatch, PropsWithChildren, SetStateAction } from "react";
 
 interface Props extends PropsWithChildren {
     state: [string, Dispatch<SetStateAction<string>>]
+    name: string
 }
 
 function TextField(props: Props) {

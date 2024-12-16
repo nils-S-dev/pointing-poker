@@ -4,6 +4,7 @@ import { Socket } from 'socket.io';
 import { Optional } from '@/types/Optional';
 import { Room } from './types/Room';
 import { User } from './types/User';
+import { Procedure } from './types/enum/Procedure';
 
 @Injectable()
 export class RoomsService {
@@ -14,13 +15,17 @@ export class RoomsService {
     return this.rooms;
   }
 
-  create(name?: string): Room {
-    // rooms created by this application are prefixed by $pp in order to differentiate them from the default room
-    const room = new Room(name || `$pp-${uniqueNamesGenerator({
+  create(procedure: Procedure, name?: string): Room {
+    // rooms created by this application are prefixed by $ in order to differentiate them from the default room
+    const room = new Room(
+      name || `$-${uniqueNamesGenerator({
       dictionaries: [colors, adjectives, starWars],
       separator: " ",
       style: 'lowerCase'
-    }).replaceAll(" ", "-")}`)
+    }).replaceAll(" ", "-")}`,  
+      procedure
+    )
+    console.log('ROOM', room);
     this.rooms.push(room)
     return room;
   }
@@ -44,7 +49,7 @@ export class RoomsService {
   }
 
   getRoomName(socket: Socket): Optional<string> {
-    return Array.from(socket.rooms).filter((r: string) => r.includes("$pp")).pop();
+    return Array.from(socket.rooms).filter((r: string) => r.includes("$")).pop();
   }
   
   getRoom(socket: Socket): Optional<Room> {

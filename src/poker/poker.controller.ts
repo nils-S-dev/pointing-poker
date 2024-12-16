@@ -1,6 +1,9 @@
-import { Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { RoomsService } from "./poker.service";
 import { Room } from "./types/Room";
+import { Optional } from "@/types/Optional";
+import { Procedure } from "./types/enum/Procedure";
+import { CreateRoomDto } from "./dto/CreateRoomDto";
 @Controller('rooms')
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
@@ -17,7 +20,7 @@ export class RoomsController {
   }
 
   @Post()
-  create(): Room {
-    return this.roomsService.create();
+  create(@Body() { procedure }: CreateRoomDto): Room {
+    return this.roomsService.create(procedure);
   }
 }
