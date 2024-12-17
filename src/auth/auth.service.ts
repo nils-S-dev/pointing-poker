@@ -9,13 +9,17 @@ export class AuthService {
     ) { }
 
     async signIn(
-        name: string,
+        user: string,
         room: string,
-    ): Promise<{ token: string }> {
-        const payload = { sub: name, room };
-        return {
-            token: await this.jwtService.signAsync(payload),
-        };
+    ): Promise<string> {
+        const payload = { sub: `${user}@${room}`, user, room};
+        return await this.jwtService.signAsync(payload)
+    }
+
+    decode<T>(
+        token: string
+    ): T {
+        return this.jwtService.decode<T>(token)
     }
 
 }

@@ -7,12 +7,14 @@ import { Events } from "./types/enum/Events";
 import { Messages } from "./types/enum/Messages";
 import { Optional } from "@/types/Optional";
 import { User } from "./types/User";
+import { AuthService } from "../auth/auth.service";
 
 @WebSocketGateway()
 export class RoomsGateway {
 
     constructor(
-        private readonly roomsService: RoomsService
+        private readonly roomsService: RoomsService,
+        private readonly authService: AuthService
     ) {
         console.log("Gateway instantiated");
     }
@@ -51,20 +53,26 @@ export class RoomsGateway {
      */
     @SubscribeMessage(Events.JOIN)
     async handleJoin(
-        @MessageBody(Messages.ROOM) roomName: string,
-        @MessageBody(Messages.USER) userName: string,
+        @MessageBody("token") token: string,
         @ConnectedSocket() socket: Socket,
     ) {
-        this.logger.log(`JOIN | User ${socket.id} (${userName}) joins room ${roomName}`)
+        const payload = this.readToken(token);
+        const roomName = payload.room
+        const usr = payload.user;
+
+        this.logger.log(`JOIN | User ${socket.id} (${usr}) joins room ${roomName}`)
 
         await this.server.in(socket.id).socketsJoin(roomName)
 
+        socket.data.user = usr;
+        socket.data.token = token;
+
         const room: Room = this.roomsService.join(roomName, {
-            name: userName,
+            name: usr,
             socketId: socket.id
         });
 
-        this.logger.log(`${socket.id} (${userName}) joined ${room.getName()}`)
+        this.logger.log(`${socket.id} (${usr}) joined ${room.getName()}`)
 
         this.server.to(room.getName()).emit(Events.JOIN, {
             user: room.findUser(socket.id),
@@ -122,6 +130,14 @@ export class RoomsGateway {
         });
         await this.server.in(socket.id).socketsLeave(room.getName())
         room.removeUser(socket.id)
+    }
+
+    // for testability
+    readToken(token: string): {
+        user: string,
+        room: string
+    } {
+        return this.authService.decode<{ user: string, room: string }>(token);
     }
 
 }

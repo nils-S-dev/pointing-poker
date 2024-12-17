@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
 import RoomPage from './pages/RoomPage'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import JoinPage from './pages/JoinPage'
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="room/:room" element={<RoomPage />} />
+          <Route path="join" element={<JoinPage />} />
         </Routes>
       </main>
       <Footer />

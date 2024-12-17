@@ -1,12 +1,24 @@
-import { useEffect, useMemo } from "react"
-import { useParams } from "react-router";
+import { useEffect, useMemo, useState } from "react"
+import { useNavigate, useParams } from "react-router";
 import io from "socket.io-client";
+import { tokenStorage } from "../util/StorageUtil";
+import { useRoomGuard } from "../hooks/useRoomGuard";
+
 function RoomPage() {
-    
+
+    /** @TODO check if user has name, else redirect to NameRoute (and remember room to redirect to) **/
     let { room } = useParams()
+
+    const isReady = useRoomGuard();
+    
     let client: SocketIOClient.Socket;
 
-    useMemo(() => {
+    useEffect(() => {
+
+        console.log('memo')
+
+        if(!isReady) return;
+
         client = io("http://localhost:3000");
 
         client.connect();
@@ -14,14 +26,17 @@ function RoomPage() {
         client.on("join", console.log)
 
         client.emit("join", {
-            room,
-            name: localStorage.getItem("pp-name")
+            token: tokenStorage.get()
         })
 
-    }, [])
+    }, [isReady])
 
     return (
-        <h1>I am the Room Page!</h1>
+        <>
+            {
+                isReady ? <h1>Ready!!!!!!</h1> : <h1>Loading...</h1>
+            }
+        </>
     )
 }
 

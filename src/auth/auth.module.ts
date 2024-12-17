@@ -4,10 +4,6 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-/**
- * @TODO make more sophisticated using refresh token
- */
-
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -21,6 +17,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
     ConfigModule
+  ],
+  exports: [
+    AuthService
   ],
   controllers: [AuthController],
   providers: [AuthService]
