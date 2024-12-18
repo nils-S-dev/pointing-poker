@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Button from "../components/partials/Button";
-import TextField from "../components/partials/TextField";
+import InputField from "../components/partials/InputField";
 import Headline from "../components/partials/Headline";
 import { useNavigate } from "react-router";
 import { Procedure } from "../enums/Procedure";
@@ -19,8 +19,8 @@ function HomePage() {
     const navigate = useNavigate()
 
     const createRoom = () => {
-        /** @TODO move to .env / Pipeline **/
-        fetch("http://localhost:3000/rooms", { 
+        debugger;
+        fetch(`${import.meta.env.VITE_API_URL}/rooms`, { 
             method: "POST", 
             headers: {
                 "Content-Type": "application/json"
@@ -42,7 +42,7 @@ function HomePage() {
         <Section>
             <Headline.h2>Start Session</Headline.h2>
             <p className="mb-3">Start a new pointing poker session by choosing a name for yourself and pressing the button. You will be able to invite your colleagues once your session is set up.</p>
-            <TextField name="name" state={ [name, setName] }>Your Name</TextField>
+            <InputField type="text" name="name" state={ [name, setName] }>Your Name</InputField>
             <DropdownField<Procedure> name="procedure" state={ [procedureOption, setProcedureOption] } options={ dropdownOptions }>Estimation Procedure</DropdownField>
             <Button onClick={ createRoom }>Go for it!</Button>
         </Section>

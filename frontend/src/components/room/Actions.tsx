@@ -1,9 +1,9 @@
+import { UIComponentProps } from "../../types/UIComponent";
 import { SubtleButton } from "../partials/Button";
 
-interface Props {
+interface Props extends UIComponentProps {
     onReveal: () => void;
     onReset: () => void;
-    className?: string;
 }
 
 function Actions({ onReset, onReveal, className }: Props) {

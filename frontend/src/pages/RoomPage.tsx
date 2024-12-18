@@ -9,6 +9,8 @@ import Board from "../components/room/Board";
 import { Nullable } from "../types/Nullable";
 import { Room } from "../types/Room";
 import { User } from "../types/User";
+import { Procedure } from "../enums/Procedure";
+import Input from "../components/room/Input";
 
 interface SocketResponse {
     user: User,
@@ -17,7 +19,6 @@ interface SocketResponse {
 
 function RoomPage() {
 
-    /** @TODO check if user has name, else redirect to NameRoute (and remember room to redirect to) **/
     const isReady = useRoomGuard();
     let socket = useRef<SocketIOClient.Socket>();
     const [room, setRoom] = useState<Nullable<Room>>(null);
@@ -85,9 +86,15 @@ function RoomPage() {
                     ?   <section className="w-full flex flex-col gap-10 lg:gap-12">
                             <Actions onReset={ reset } onReveal={ reveal } />
                             <div className="contents lg:flex">
-                                <Board className="w-full px-4 mx-auto sm:w-[400px] md:w-[500px] lg:w-[700px] lg:pr-5" { ...room } />
-                                {/** @TODO refactor to container class or control this from the parent element **/}
-                                <Options className="w-full px-4 mx-auto sm:w-[400px] md:w-[500px] lg:w-[700px] lg:pl-5" onClick={ estimate } options={ procedures[0].options } />
+                                <Board className="w-full px-4 mx-auto lg:pr-5" { ...room } />
+                                {
+                                    room.procedure === Procedure.CUSTOM
+                                        && <Input className="w-full px-4 mx-auto lg:pl-5" onClick={ estimate } />
+                                }
+                                {
+                                    room.procedure === Procedure.FIBONACCI
+                                        && <Options className="w-full px-4 mx-auto lg:pl-5" onClick={ estimate } options={ procedures[0].options } />
+                                }
                             </div>
                         </section>
                     :   <>Loading ...</>

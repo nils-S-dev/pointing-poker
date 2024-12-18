@@ -51,6 +51,6 @@ export const dropdownOptions: Array<DropdownOption<Procedure>> = [
     },
     {
         label: "Custom",
-        value: Procedure.FIBONACCI
+        value: Procedure.CUSTOM
     }
 ]

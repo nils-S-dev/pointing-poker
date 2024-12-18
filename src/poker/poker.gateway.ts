@@ -8,9 +8,7 @@ import { Optional } from "@/types/Optional";
 import { User } from "./types/User";
 import { AuthService } from "../auth/auth.service";
 
-@WebSocketGateway({ cors: {
-    origin: "*"
-}}) /** @TODO make false for prod (when on same domain) **/
+@WebSocketGateway({ cors: process.env.NODE_ENV !== 'production' })
 export class RoomsGateway {
 
     constructor(
@@ -58,20 +56,22 @@ export class RoomsGateway {
 
         this.logger.log(`JOIN | User ${socket.id} (${userName}) joins room ${roomName}`)
 
-        await this.server.in(socket.id).socketsJoin(roomName)
-
-        socket.data.user = {
-            name: userName,
-            token: token
+        // Fix for refreshing / rejoining: When using the same token the "old" user should be kicked and replaced
+        let room: Optional<Room> = this.roomsService.getRoomByName(roomName)
+        const existingUser: Optional<User> = room?.findUserByToken(token)
+        if (existingUser) {
+            await this.server.in(existingUser.socketId).socketsLeave(roomName)
+            existingUser.socketId = socket.id
+        } else {
+            room = this.roomsService.join(roomName, {
+                name: userName,
+                socketId: socket.id,
+                token
+            });
+    
+            this.logger.log(`${socket.id} (${userName}) joined ${room.getName()}`)
         }
-
-        const room: Room = this.roomsService.join(roomName, {
-            name: userName,
-            socketId: socket.id
-        });
-
-        this.logger.log(`${socket.id} (${userName}) joined ${room.getName()}`)
-
+        await this.server.in(socket.id).socketsJoin(roomName)
         this.server.to(room.getName()).emit(Events.JOIN, {
             user: room.findUser(socket.id),
             room

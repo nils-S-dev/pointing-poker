@@ -19,6 +19,10 @@ export class Room {
         return this.users.find(user => user.socketId === socketId);
     }
 
+    findUserByToken(token: string): Optional<User> {
+        return this.users.find(user => user.token === token);
+    }
+
     removeUser(socketId: string): Room {
         this.users = this.users.filter((user: User) => user.socketId !== socketId);
         return this;

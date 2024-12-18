@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { tokenStorage } from "../util/StorageUtil";
 import { useNavigate, useParams } from "react-router";
 
+/** Custom Implementation of Something an in-component-route-guard would be  */
 export function useRoomGuard(): boolean {
 
     const [ok, setOk] = useState(false);
@@ -15,15 +16,11 @@ export function useRoomGuard(): boolean {
     useEffect(() => {
         const token = tokenStorage.get();
 
-        /** Custom Implementation of Something an in-component-route-guard would be  */
-    
         // ensure token exists
         if (!token) {
             navigate(`/join?room=${room}`)
         }
 
-        /** Custom Implementation of Something an in-component-route-guard would be  */
-        /**  @TODO make this guard a hook **/
         fetch("http://localhost:3000/auth/validate", {
             headers: {
                 "Authorization": `Bearer ${token}`

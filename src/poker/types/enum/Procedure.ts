@@ -2,5 +2,4 @@
 export enum Procedure {
     FIBONACCI = "fibonacci",
     CUSTOM = "custom"
-    /** @TODO more to come, including custom ones **/
 }

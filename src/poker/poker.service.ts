@@ -31,13 +31,13 @@ export class RoomsService {
   }
 
   join(name: string, user: User): Room {
-    const room: Optional<Room> = this.findByName(name);
+    const room: Optional<Room> = this.getRoomByName(name);
     room.addUser(user)
     return room;
   }
 
   leave(name: string, user: User): Room {
-    const room: Optional<Room> = this.findByName(name);
+    const room: Optional<Room> = this.getRoomByName(name);
     room.removeUser(user.socketId)
     return room;
   }
@@ -58,10 +58,10 @@ export class RoomsService {
   }
   
   getRoom(socket: Socket): Optional<Room> {
-    return this.findByName(this.getRoomName(socket));
+    return this.getRoomByName(this.getRoomName(socket));
   }
 
-  private findByName(name: string): Optional<Room> {
+  getRoomByName(name: string): Optional<Room> {
     return this.rooms.find((room: Room) => room.getName() === name);
   }
 

@@ -1,11 +1,11 @@
 import { EstimationOption } from "../../types/EstimationOption";
 import { EstimationProcedure } from "../../types/EstimationProcedure";
+import { UIComponentProps } from "../../types/UIComponent";
 import Headline from "../partials/Headline";
 import Section from "../partials/Section";
 
-type Props = Pick<EstimationProcedure, "options"> & {
+type Props = Pick<EstimationProcedure, "options"> & UIComponentProps & {
     onClick: (val: number) => void,
-    className?: string
 }
 
 function Options({ options, onClick, className }: Props) {

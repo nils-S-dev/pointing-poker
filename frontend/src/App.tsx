@@ -9,7 +9,7 @@ function App() {
   return (
     <article className="w-full text-gray-100">
       <Header />
-      <main className="max-w-[1400px] mx-auto min-h-[80vh] pt-12 px-6 lg:px-8">
+      <main className="mx-auto min-h-[80vh] pt-12 px-6 lg:px-8 sm:max-w-[400px] md:max-w-[500px] lg:max-w-[700px] xl:lg:max-w-[1400px]">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="room/:room" element={<RoomPage />} />

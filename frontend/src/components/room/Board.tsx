@@ -1,14 +1,11 @@
 import { Room } from "../../types/Room";
+import { UIComponentProps } from "../../types/UIComponent";
 import { User } from "../../types/User";
 import Chip from "../partials/Chip";
 import Headline from "../partials/Headline";
 import Section from "../partials/Section";
 
-interface Props extends Room {
-    className?: string /** @TODO refactor occurences of className to own interface to extend from **/
-}
-
-function Board({ users, revealed, className }: Props) {
+function Board({ users, revealed, className }: Room & UIComponentProps) {
     return (
         <Section>
             <Headline.h3>Board</Headline.h3>

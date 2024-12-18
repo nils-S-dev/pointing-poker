@@ -17,6 +17,15 @@
         "sourceMaps": true,
         "stopOnEntry": false,
         "console": "integratedTerminal",
+      },
+      {
+        "type": "node",
+        "request": "attach",
+        "name": "Attach",
+        "port": 9229,
+        "skipFiles": [
+          "<node_internals>/**"
+        ]
       }
     ]
 }
