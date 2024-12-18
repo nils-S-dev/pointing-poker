@@ -35,7 +35,7 @@ function JoinPage() {
 
     return (
         <Section>
-            <Headline>Join Session</Headline>
+            <Headline.h2>Join Session</Headline.h2>
             <p className="mb-3">Join an existing pointing poker session by choosing a name for yourself and pressing the button. You will be able to invite your colleagues once your session is set up.</p>
             <TextField name="name" state={ [name, setName] }>Your Name</TextField>
             <Button onClick={ joinRoom }>Jump on it!</Button>

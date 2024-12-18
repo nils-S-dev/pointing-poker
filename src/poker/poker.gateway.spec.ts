@@ -8,7 +8,6 @@ import { RoomsController } from "./poker.controller";
 import { Room } from "./types/Room";
 import { User } from "./types/User";
 import { Procedure } from "./types/enum/Procedure";
-import { AuthService } from "../auth/auth.service";
 import { MockFunctionMetadata, ModuleMocker } from "jest-mock";
 import { AuthModule } from "../auth/auth.module";
 

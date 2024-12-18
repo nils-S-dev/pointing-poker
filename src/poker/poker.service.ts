@@ -29,7 +29,7 @@ export class RoomsService {
     this.rooms.push(room)
     return room;
   }
-  
+
   join(name: string, user: User): Room {
     const room: Optional<Room> = this.findByName(name);
     room.addUser(user)
@@ -42,9 +42,14 @@ export class RoomsService {
     return room;
   }
 
+  /** @TODO make method of room **/
   estimate(room: Room, socketId: string, estimation: number): User {
     const user = room.findUser(socketId);
     user.estimation = estimation;
+    // auto reveal when everyone has estimated
+    if (room.getUsers().every(user => user.estimation !== undefined)) {
+      room.reveal();
+    }
     return user;
   }
 

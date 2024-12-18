@@ -1,9 +1,14 @@
 import { PropsWithChildren } from "react";
 
-function Headline(props: PropsWithChildren) {
-    return (
-        <h2 className="text-3xl mb-5">{ props.children }</h2>
-    )
+interface Props extends PropsWithChildren {
+    className?: string;
 }
 
-export default Headline
+export default {
+    h2: ({ className, children }: Props) => (
+        <h2 className={ `text-3xl ${ className }` }>{ children }</h2>
+    ),
+    h3: ({ className, children }: Props) => (
+        <h3 className={ `text-2xl ${ className }` }>{ children }</h3>
+    )
+}

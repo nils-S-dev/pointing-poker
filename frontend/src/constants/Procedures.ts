@@ -40,6 +40,10 @@ export const fibonacci: EstimationProcedure = {
     ]
 }
 
+export const procedures = [
+    fibonacci
+]
+
 export const dropdownOptions: Array<DropdownOption<Procedure>> = [
     {
         label: "Fibonacci",

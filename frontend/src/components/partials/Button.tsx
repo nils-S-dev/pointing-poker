@@ -11,3 +11,9 @@ function Button(props: Props) {
 }
 
 export default Button
+
+export const SubtleButton = (props: Props) => {
+    return (
+        <button className="py-2 px-5 text-lg rounded-xl bg-steel-500 border-steel-400 border transition-all hover:bg-steel-400 active:bg-steel-700" onClick={ props.onClick }>{ props.children }</button>
+    )
+}

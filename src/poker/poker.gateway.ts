@@ -4,12 +4,13 @@ import { RoomsService } from "./poker.service";
 import { Room } from "./types/Room";
 import { Logger } from "@nestjs/common";
 import { Events } from "./types/enum/Events";
-import { Messages } from "./types/enum/Messages";
 import { Optional } from "@/types/Optional";
 import { User } from "./types/User";
 import { AuthService } from "../auth/auth.service";
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: {
+    origin: "*"
+}}) /** @TODO make false for prod (when on same domain) **/
 export class RoomsGateway {
 
     constructor(
@@ -48,31 +49,28 @@ export class RoomsGateway {
         }
     }
 
-    /**
-     * @TODO socket should only be in ONE room at the same time!!! MAKE SURE!
-     */
     @SubscribeMessage(Events.JOIN)
     async handleJoin(
         @MessageBody("token") token: string,
         @ConnectedSocket() socket: Socket,
     ) {
-        const payload = this.readToken(token);
-        const roomName = payload.room
-        const usr = payload.user;
+        const { room: roomName, user: userName } = this.readToken(token);
 
-        this.logger.log(`JOIN | User ${socket.id} (${usr}) joins room ${roomName}`)
+        this.logger.log(`JOIN | User ${socket.id} (${userName}) joins room ${roomName}`)
 
         await this.server.in(socket.id).socketsJoin(roomName)
 
-        socket.data.user = usr;
-        socket.data.token = token;
+        socket.data.user = {
+            name: userName,
+            token: token
+        }
 
         const room: Room = this.roomsService.join(roomName, {
-            name: usr,
+            name: userName,
             socketId: socket.id
         });
 
-        this.logger.log(`${socket.id} (${usr}) joined ${room.getName()}`)
+        this.logger.log(`${socket.id} (${userName}) joined ${room.getName()}`)
 
         this.server.to(room.getName()).emit(Events.JOIN, {
             user: room.findUser(socket.id),

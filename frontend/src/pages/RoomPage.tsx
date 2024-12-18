@@ -1,17 +1,26 @@
-import { useEffect, useMemo, useState } from "react"
-import { useNavigate, useParams } from "react-router";
+import { useEffect, useRef, useState } from "react"
 import io from "socket.io-client";
 import { tokenStorage } from "../util/StorageUtil";
 import { useRoomGuard } from "../hooks/useRoomGuard";
+import Options from "../components/room/Options";
+import { procedures } from "../constants/Procedures";
+import Actions from "../components/room/Actions";
+import Board from "../components/room/Board";
+import { Nullable } from "../types/Nullable";
+import { Room } from "../types/Room";
+import { User } from "../types/User";
+
+interface SocketResponse {
+    user: User,
+    room: Room
+}
 
 function RoomPage() {
 
     /** @TODO check if user has name, else redirect to NameRoute (and remember room to redirect to) **/
-    let { room } = useParams()
-
     const isReady = useRoomGuard();
-    
-    let client: SocketIOClient.Socket;
+    let socket = useRef<SocketIOClient.Socket>();
+    const [room, setRoom] = useState<Nullable<Room>>(null);
 
     useEffect(() => {
 
@@ -19,25 +28,73 @@ function RoomPage() {
 
         if(!isReady) return;
 
-        client = io("http://localhost:3000");
+        console.log('Assigning socket');
+        socket.current = io("http://localhost:3000")
 
-        client.connect();
+        socket.current.connect();
 
-        client.on("join", console.log)
-
-        client.emit("join", {
+        /** @TODO make shared (with BE) enum */
+        socket.current.emit("join", {
             token: tokenStorage.get()
+        })
+
+        /** @TODO make shared (with BE) enum */
+        socket.current.on("join", (data: SocketResponse) => {
+            console.log('On: Join', data);
+            setRoom(data.room);
+        })
+
+        socket.current.on("estimate", (data: SocketResponse) => {
+            console.log('On: estimate', data);
+            setRoom(data.room);
+        })
+
+        socket.current.on("reveal", (data: SocketResponse) => {
+            console.log('On: reveal', data);
+            setRoom(data.room);
+        })
+
+        socket.current.on("reset", (data: SocketResponse) => {
+            console.log('On: reset', data);
+            setRoom(data.room);
         })
 
     }, [isReady])
 
+    const estimate = (estimation: number) => {
+        /** @TODO make shared (with BE) enum */
+        socket.current?.emit("estimate", {
+            estimation
+        })
+    }
+
+    const reset = () => {
+        /** @TODO make shared (with BE) enum */
+        socket.current?.emit("reset")
+    }
+
+    const reveal = () => {
+        /** @TODO make shared (with BE) enum */
+        socket.current?.emit("reveal")
+    }
+
     return (
         <>
             {
-                isReady ? <h1>Ready!!!!!!</h1> : <h1>Loading...</h1>
+                isReady && room
+                    ?   <section className="w-full flex flex-col gap-10 lg:gap-12">
+                            <Actions onReset={ reset } onReveal={ reveal } />
+                            <div className="contents lg:flex">
+                                <Board className="w-full px-4 mx-auto sm:w-[400px] md:w-[500px] lg:w-[700px] lg:pr-5" { ...room } />
+                                {/** @TODO refactor to container class or control this from the parent element **/}
+                                <Options className="w-full px-4 mx-auto sm:w-[400px] md:w-[500px] lg:w-[700px] lg:pl-5" onClick={ estimate } options={ procedures[0].options } />
+                            </div>
+                        </section>
+                    :   <>Loading ...</>
             }
         </>
     )
+
 }
 
 export default RoomPage

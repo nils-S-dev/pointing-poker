@@ -27,7 +27,7 @@ function HomePage() {
             }, 
             body: JSON.stringify({
                 user: name,
-                procedure: "fibonacci"
+                procedure: procedureOption.value
             })
         })
         .then(response => response.json())
@@ -40,7 +40,7 @@ function HomePage() {
 
     return (
         <Section>
-            <Headline>Start Session</Headline>
+            <Headline.h2>Start Session</Headline.h2>
             <p className="mb-3">Start a new pointing poker session by choosing a name for yourself and pressing the button. You will be able to invite your colleagues once your session is set up.</p>
             <TextField name="name" state={ [name, setName] }>Your Name</TextField>
             <DropdownField<Procedure> name="procedure" state={ [procedureOption, setProcedureOption] } options={ dropdownOptions }>Estimation Procedure</DropdownField>
