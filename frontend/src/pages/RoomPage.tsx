@@ -30,7 +30,7 @@ function RoomPage() {
         if(!isReady) return;
 
         console.log('Assigning socket');
-        socket.current = io("http://localhost:3000")
+        socket.current = io(import.meta.env.VITE_API_URL)
 
         socket.current.connect();
 

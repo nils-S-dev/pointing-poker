@@ -16,12 +16,6 @@ export class RoomsController {
     return "ok";
   }
 
-  // @TODO protect for admin role (or remove)
-  @Get()
-  getAll(): Array<Room> {
-    return this.roomsService.getAll();
-  }
-
   @Post()
   async create(@Body() { user, procedure }: CreateRoomDto): Promise<{
     token: string,

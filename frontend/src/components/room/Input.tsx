@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { EstimationOption } from "../../types/EstimationOption";
-import { EstimationProcedure } from "../../types/EstimationProcedure";
 import { UIComponentProps } from "../../types/UIComponent";
 import Headline from "../partials/Headline";
 import Section from "../partials/Section";

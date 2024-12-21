@@ -6,7 +6,6 @@ import { useNavigate } from "react-router";
 import { Procedure } from "../enums/Procedure";
 import { DropdownOption } from "../types/DropdownOption";
 import { dropdownOptions } from "../constants/Procedures";
-import { Optional } from "../types/Optional";
 import DropdownField from "../components/partials/DropdownField";
 import { tokenStorage } from "../util/StorageUtil";
 import Section from "../components/partials/Section";
@@ -19,7 +18,6 @@ function HomePage() {
     const navigate = useNavigate()
 
     const createRoom = () => {
-        debugger;
         fetch(`${import.meta.env.VITE_API_URL}/rooms`, { 
             method: "POST", 
             headers: {

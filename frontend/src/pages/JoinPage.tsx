@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from "react"
-import { useNavigate, useParams, useSearchParams } from "react-router";
-import io from "socket.io-client";
+import { useState } from "react"
+import { useNavigate, useSearchParams } from "react-router";
 import Section from "../components/partials/Section";
 import Headline from "../components/partials/Headline";
 import InputField from "../components/partials/InputField";
@@ -15,7 +14,7 @@ function JoinPage() {
     const room = searchParams.get("room");
 
     const joinRoom = () => {
-        fetch("http://localhost:3000/auth", { 
+        fetch(import.meta.env.VITE_API_URL, { 
             method: "POST", 
             headers: {
                 "Content-Type": "application/json"
