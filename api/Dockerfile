@@ -2,6 +2,12 @@ FROM node:22-alpine
 
 WORKDIR /app
 
+ARG JWT_SECRET
+ENV JWT_SECRET=$JWT_SECRET
+
+ARG CLIENT_URL
+ENV CLIENT_URLT=$CLIENT_URL
+
 COPY . .
 COPY package.json package.json
 COPY package-lock.json package-lock.json

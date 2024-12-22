@@ -10,6 +10,8 @@ RUN npm install
 
 # Copy the entire application code to the container
 COPY . .
+
+# @TODO still necessary?
 COPY .env.production .env.production
 
 # Build the React app for production

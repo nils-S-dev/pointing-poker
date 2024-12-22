@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: process.env.NODE_ENV !== "production" ? true : {
-    origin: process.env.ORIGIN
+    origin: process.env.CLIENT_URL
   } });
   app.useWebSocketAdapter(new IoAdapter(app));
   app.useGlobalPipes(new ValidationPipe());

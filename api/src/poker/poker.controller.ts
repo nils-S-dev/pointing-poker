@@ -3,17 +3,19 @@ import { RoomsService } from "./poker.service";
 import { Room } from "./types/Room";
 import { CreateRoomDto } from "./dto/CreateRoomDto";
 import { AuthService } from "../auth/auth.service";
+import { ConfigService } from "@nestjs/config";
 
 @Controller('rooms')
 export class RoomsController {
   constructor(
     private readonly roomsService: RoomsService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService
   ) {}
 
   @Get("health")
   health(): string {
-    return "ok";
+    return `${this.configService.get<string>('JWT_SECRET')} ${this.configService.get<string>('CLIENT_URL')}`;
   }
 
   @Post()
