@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import io from "socket.io-client";
 import { tokenStorage } from "../util/StorageUtil";
 import { useRoomGuard } from "../hooks/useRoomGuard";
@@ -11,6 +11,7 @@ import { Room } from "../types/Room";
 import { User } from "../types/User";
 import { Procedure } from "../enums/Procedure";
 import Input from "../components/room/Input";
+import Section from "../components/partials/Section";
 
 interface SocketResponse {
     user: User,
@@ -25,11 +26,8 @@ function RoomPage() {
 
     useEffect(() => {
 
-        console.log('memo')
-
         if(!isReady) return;
 
-        console.log('Assigning socket');
         socket.current = io(import.meta.env.VITE_API_URL)
 
         socket.current.connect();
@@ -40,27 +38,23 @@ function RoomPage() {
         })
 
         /** @TODO make shared (with BE) enum */
-        socket.current.on("join", (data: SocketResponse) => {
-            console.log('On: Join', data);
-            setRoom(data.room);
-        })
+        socket.current.on("join", (data: SocketResponse) => setRoom(data.room))
 
-        socket.current.on("estimate", (data: SocketResponse) => {
-            console.log('On: estimate', data);
-            setRoom(data.room);
-        })
+        /** @TODO make shared (with BE) enum */
+        socket.current.on("estimate", (data: SocketResponse) => setRoom(data.room))
 
-        socket.current.on("reveal", (data: SocketResponse) => {
-            console.log('On: reveal', data);
-            setRoom(data.room);
-        })
+        /** @TODO make shared (with BE) enum */
+        socket.current.on("reveal", (data: SocketResponse) => setRoom(data.room))
 
-        socket.current.on("reset", (data: SocketResponse) => {
-            console.log('On: reset', data);
-            setRoom(data.room);
-        })
+        /** @TODO make shared (with BE) enum */
+        socket.current.on("reset", (data: SocketResponse) => setRoom(data.room))
 
     }, [isReady])
+
+    // computed property
+    const user = useMemo(() => {
+        return room?.users.find(u => u.socketId === socket.current?.id);
+      }, [room]);
 
     const estimate = (estimation: number) => {
         /** @TODO make shared (with BE) enum */
@@ -82,19 +76,21 @@ function RoomPage() {
     return (
         <>
             {
-                isReady && room
-                    ?   <section className="w-full flex flex-col gap-10 lg:gap-12">
+                isReady && room && user
+                    ?   <section className="w-full flex flex-col gap-10 pb-28 lg:gap-12 lg:pb-0">
                             <Actions onReset={ reset } onReveal={ reveal } />
-                            <div className="contents lg:flex">
+                            <div className="flex flex-col md:gap-8 md:flex-row">
                                 <Board className="w-full px-4 mx-auto lg:pr-5" { ...room } />
-                                {
-                                    room.procedure === Procedure.CUSTOM
-                                        && <Input className="w-full px-4 mx-auto lg:pl-5" onClick={ estimate } />
-                                }
-                                {
-                                    room.procedure === Procedure.FIBONACCI
-                                        && <Options className="w-full px-4 mx-auto lg:pl-5" onClick={ estimate } options={ procedures[0].options } />
-                                }
+                                <Section className="w-full fixed bottom-0 left-0 py-6 shadow-2xl bg-steel px-4 mx-auto md:py-0 md:px-0 md:static md:shadow-none md:bg-transparent">
+                                    {
+                                        room.procedure === Procedure.CUSTOM
+                                            && <Input  onClick={ estimate } />
+                                    }
+                                    {
+                                        room.procedure === Procedure.FIBONACCI
+                                            && <Options className="w-full px-4 mx-auto sm:max-w-[400px] md:max-w-none md:px-0" estimation={ user.estimation } onClick={ estimate } options={ procedures[0].options } />
+                                    }
+                                </Section>
                             </div>
                         </section>
                     :   <>Loading ...</>

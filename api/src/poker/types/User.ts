@@ -1,8 +1,8 @@
-import { Nullable } from "@/types/Nullable";
+import { Optional } from "@/types/Optional";
 
 export interface User {
     name: string;
-    estimation?: Nullable<number>,
+    estimation?: Optional<number>,
     socketId: string;
     token: string;
 }

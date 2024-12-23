@@ -7,6 +7,7 @@ export default {
     },
     extend: {
       colors: {
+        transparent: 'transparent',
         'steel': {
           DEFAULT: '#111921',
           50: '#A3BBD0',
