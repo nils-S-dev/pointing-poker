@@ -2,7 +2,6 @@ import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router";
 import Section from "../components/partials/Section";
 import Headline from "../components/partials/Headline";
-import InputField from "../components/partials/fields/TextField";
 import Button from "../components/partials/Button";
 import { tokenStorage } from "../util/StorageUtil";
 import TextField from "../components/partials/fields/TextField";
