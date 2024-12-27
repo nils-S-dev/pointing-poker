@@ -7,6 +7,7 @@ import { Events } from "./types/enum/Events";
 import { Optional } from "@/types/Optional";
 import { User } from "./types/User";
 import { AuthService } from "../auth/auth.service";
+import { JwtDecoded } from "@/auth/types/JwtDecoded";
 
 @WebSocketGateway({ cors: process.env.NODE_ENV !== "production" ? true : {
     origin: process.env.CLIENT_URL
@@ -36,16 +37,10 @@ export class RoomsGateway {
 
     /** ONLY FOR TESTING PURPOSES **/
     @SubscribeMessage(Events.DEBUG)
-    async debug(
-        @MessageBody() body: {
-            message: string;
-        }
-    ) {
+    async debug() {
         console.log("DEBUG");
-        this.logger.log(`DEBUG: Sending ${body.message}`)
         return {
-            event: Events.DEBUG,
-            data: body.message
+            event: Events.DEBUG
         }
     }
 
@@ -54,7 +49,10 @@ export class RoomsGateway {
         @MessageBody("token") token: string,
         @ConnectedSocket() socket: Socket,
     ) {
+        console.log('JOINING');
         const { room: roomName, user: userName } = this.readToken(token);
+
+        console.log('GATEWAY: roomName', roomName, 'user', userName, 'result', this.readToken(token))
 
         this.logger.log(`JOIN | User ${socket.id} (${userName}) joins room ${roomName}`)
 
@@ -137,7 +135,7 @@ export class RoomsGateway {
         user: string,
         room: string
     } {
-        return this.authService.decode<{ user: string, room: string }>(token);
+        return this.authService.decode(token);
     }
 
 }

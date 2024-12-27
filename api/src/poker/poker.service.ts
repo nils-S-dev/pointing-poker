@@ -31,6 +31,7 @@ export class RoomsService {
   }
 
   join(name: string, user: User): Room {
+    console.log('SERVICE: JOINING ROOM', this.rooms, name);
     const room: Optional<Room> = this.getRoomByName(name);
     room.addUser(user)
     return room;

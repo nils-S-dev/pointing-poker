@@ -10,15 +10,12 @@ import { User } from "./types/User";
 import { Procedure } from "./types/enum/Procedure";
 import { MockFunctionMetadata, ModuleMocker } from "jest-mock";
 import { AuthModule } from "../auth/auth.module";
+import { ConfigService } from "@nestjs/config";
+import { mock, mockReset } from 'jest-mock-extended';
+import { JwtDecoded } from "../auth/types/JwtDecoded";
+import { AuthService } from "../auth/auth.service";
 
 
-/**
- * @TODO broken test
- * Background: Join with token, result of token decoding cannot be mocked succesfully
- * find a workaround or scrap it, it is either way too complex for this size of project
- */
-
-  const moduleMocker = new ModuleMocker(global);
 
 /**
  * Actually and end-to-end test testing the behaviour of joining a room and interacting inside of it
@@ -29,6 +26,9 @@ import { AuthModule } from "../auth/auth.module";
  * Alice & Bob, John Doe & Jane Doe
  */
 describe('RoomsGateway', () => {
+  
+  // We mock the AppService with one simple step and get a default empty implementation
+  const authServiceMock = mock<AuthService>();
 
   let service: RoomsService;
 
@@ -37,31 +37,18 @@ describe('RoomsGateway', () => {
 
   let room: Room;
 
-  const USER_NAME = "John Doe";
-  const ROOM_NAME = "$-testing-room";
+  const MOCK_ROOM_NAME = "$-testing-room";
+  const MOCK_USER_NAME = "John Doe";
 
   beforeAll(async () => {
     // Instantiate the app
     const moduleFixture = await Test.createTestingModule({
       imports: [AuthModule],
       controllers: [RoomsController],
-      providers: [RoomsGateway, RoomsService],
+      providers: [RoomsGateway, RoomsService, ConfigService],
     })
-    .useMocker((token) => {
-      if (token === RoomsService) {
-        return { readToken: jest.fn().mockResolvedValue({
-          user: USER_NAME,
-          room: ROOM_NAME
-        }) };
-      }
-      if (typeof token === 'function') {
-        const mockMetadata = moduleMocker.getMetadata(
-          token,
-        ) as MockFunctionMetadata<any, any>;
-        const Mock = moduleMocker.generateFromMetadata(mockMetadata);
-        return new Mock();
-      }
-    })
+    .overrideProvider(AuthService) // override the dependency with the mocked version
+    .useValue(authServiceMock)
     .compile();
 
     app = moduleFixture.createNestApplication();
@@ -77,7 +64,7 @@ describe('RoomsGateway', () => {
       transports: ["websocket", "polling"],
     });
 
-    room = service.create(Procedure.FIBONACCI, ROOM_NAME);
+    room = service.create(Procedure.FIBONACCI, MOCK_ROOM_NAME);
 
     ioClient.connect();
 
@@ -88,22 +75,44 @@ describe('RoomsGateway', () => {
     app.close();
   });
 
+  beforeEach(() => {
+    mockReset(authServiceMock);
+  });
+
+  describe('[Event] `debug`', () => {
+
+    it('should respond', async () => {
+      ioClient.emit(Events.DEBUG);
+      await new Promise<void>((resolve) => {
+        ioClient.on(Events.DEBUG, () => {
+          expect(true).toBeTruthy();
+          resolve();
+        });
+      });
+    })
+
+  })
+
   describe("[Event] `join`", () => {
 
     it('should add user to room', async () => {
+
+      authServiceMock.decode.mockReturnValueOnce({
+        room: MOCK_ROOM_NAME,
+        user: MOCK_USER_NAME
+      });
     
       ioClient.emit(Events.JOIN, {
-        user: USER_NAME,
-        room: room.getName()
+        token: "valar-morgulis" // token decoding is mocked
       });
   
       await new Promise<void>((resolve) => {
         ioClient.on(Events.JOIN, (data) => {
           expect(data.user).toBeTruthy();
-          expect(data.user.name).toBe(USER_NAME);
+          expect(data.user.name).toBe(MOCK_USER_NAME);
           expect(data.room).toBeTruthy();
           expect(data.room.name).toBe(room.getName());
-          expect(data.room.users.some(u => u.name === USER_NAME)).toBeTruthy();
+          expect(data.room.users.some(u => u.name === MOCK_USER_NAME)).toBeTruthy();
           resolve();
         });
       });
@@ -123,11 +132,11 @@ describe('RoomsGateway', () => {
   
       await new Promise<void>((resolve) => {
         ioClient.on(Events.ESTIMATE, (data) => {
-          expect(data.user.name).toBe(USER_NAME);
+          expect(data.user.name).toBe(MOCK_USER_NAME);
           expect(data.room.name).toBe(room.getName());
           const userInRoom = data.room.users.find(user => ioClient.id === user.socketId);
           expect(userInRoom).toBeTruthy();
-          expect(userInRoom).toBe
+          expect(userInRoom.estimation).toBe(estimation)
           resolve();
         });
       });
@@ -142,7 +151,7 @@ describe('RoomsGateway', () => {
 
       await new Promise<void>((resolve) => {
         ioClient.on(Events.REVEAL, (data) => {
-          expect(data.user.name).toBe(USER_NAME);
+          expect(data.user.name).toBe(MOCK_USER_NAME);
           expect(data.room.revealed).toBe(true);
           resolve();
         });
@@ -157,7 +166,7 @@ describe('RoomsGateway', () => {
 
       await new Promise<void>((resolve) => {
         ioClient.on(Events.RESET, (data) => {
-          expect(data.user.name).toBe(USER_NAME);
+          expect(data.user.name).toBe(MOCK_USER_NAME);
           expect(data.room.revealed).toBe(false);
           expect(data.room.users.find((user: User) => !!user.estimation)).toBeFalsy()
           resolve();
@@ -165,4 +174,5 @@ describe('RoomsGateway', () => {
       });
     })
   })
-  })
+
+})

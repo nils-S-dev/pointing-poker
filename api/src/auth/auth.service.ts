@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { JwtDecoded } from './types/JwtDecoded';
 
 @Injectable()
 export class AuthService {
@@ -16,10 +17,10 @@ export class AuthService {
         return await this.jwtService.signAsync(payload)
     }
 
-    decode<T>(
+    decode(
         token: string
-    ): T {
-        return this.jwtService.decode<T>(token)
+    ): JwtDecoded {
+        return this.jwtService.decode<JwtDecoded>(token)
     }
 
 }
