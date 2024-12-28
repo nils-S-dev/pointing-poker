@@ -33,15 +33,19 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="#startup">Startup</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li>
+      <a href="#local-development">Local Development</a>
+      <ul>
+        <li><a href="#api">API</a></li>
+        <li><a href="#client">Client</a></li>
+      </ul>
+    </li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
@@ -105,26 +109,59 @@ docker compose -f <YOUR-COMPOSE-FILE> up
 
 ## Local Development
 
-@TODO
+### API
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-5. Change git remote url to avoid accidental pushes to base project
-   ```sh
-   git remote set-url origin github_username/repo_name
-   git remote -v # confirm the changes
-   ```
+The following steps need to be performed in order to start the API locally
+
+#### Install Dependencies
+
+Navigate into the `api` directory 
+```
+cd api
+```
+and install the depencencies
+```
+npm install
+```
+
+#### Environment Variables
+
+1. Copy the `.env.template` file and rename it to `.env`.
+2. Set `JWT_SECRET` to be any random string feasible for encoding JSON Web Tokens.
+
+#### Startup
+
+Start the API by running
+```
+npm run start:dev
+```
+
+### Client
+
+The following steps need to be performed in order to start the client locally
+
+#### Install Dependencies
+
+Navigate into the `client` directory 
+```
+cd client
+```
+and install the depencencies
+```
+npm install
+```
+
+#### Environment Variables
+
+The repository provides a `.env.development` file which Vite will used for local development.
+
+#### Startup
+
+Start the client by running
+```
+npm run dev
+```
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
