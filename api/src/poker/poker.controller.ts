@@ -13,20 +13,14 @@ export class RoomsController {
     private readonly configService: ConfigService
   ) {}
 
-  @Get("health")
-  health(): string {
-    return `${this.configService.get<string>('JWT_SECRET')} ${this.configService.get<string>('CLIENT_URL')}`;
-  }
-
   @Post()
   async create(@Body() { user, procedure }: CreateRoomDto): Promise<{
     token: string,
     room: Room
   }> {
-    console.log('CREATE ROOM', user, procedure);
     const room = this.roomsService.create(procedure) 
     return {
-      token: await this.authService.signIn(user, room.getName()),
+      token: await this.authService.signIn(user, this.roomsService.create(procedure).getName()),
       room
     }
   }

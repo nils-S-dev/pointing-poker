@@ -7,7 +7,6 @@ import { Events } from "./types/enum/Events";
 import { Optional } from "@/types/Optional";
 import { User } from "./types/User";
 import { AuthService } from "../auth/auth.service";
-import { JwtDecoded } from "@/auth/types/JwtDecoded";
 
 @WebSocketGateway({ cors: process.env.NODE_ENV !== "production" ? true : {
     origin: process.env.CLIENT_URL
@@ -17,42 +16,18 @@ export class RoomsGateway {
     constructor(
         private readonly roomsService: RoomsService,
         private readonly authService: AuthService
-    ) {
-        console.log("Gateway instantiated");
-    }
+    ) {}
 
     @WebSocketServer() server: Server;
 
     private logger = new Logger('RoomsGateway');
-
-    // whenever a user connects
-    handleConnection(client: Socket) {
-        console.log('new user connected', client.id);
-    }
-
-    // whenever a user disconnects
-    handleDisconnection(client: Socket) {
-        console.log('user disconnected', client.id);
-    }
-
-    /** ONLY FOR TESTING PURPOSES **/
-    @SubscribeMessage(Events.DEBUG)
-    async debug() {
-        console.log("DEBUG");
-        return {
-            event: Events.DEBUG
-        }
-    }
 
     @SubscribeMessage(Events.JOIN)
     async handleJoin(
         @MessageBody("token") token: string,
         @ConnectedSocket() socket: Socket,
     ) {
-        console.log('JOINING');
         const { room: roomName, user: userName } = this.readToken(token);
-
-        console.log('GATEWAY: roomName', roomName, 'user', userName, 'result', this.readToken(token))
 
         this.logger.log(`JOIN | User ${socket.id} (${userName}) joins room ${roomName}`)
 

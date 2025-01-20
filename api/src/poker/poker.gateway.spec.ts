@@ -8,26 +8,13 @@ import { RoomsController } from "./poker.controller";
 import { Room } from "./types/Room";
 import { User } from "./types/User";
 import { Procedure } from "./types/enum/Procedure";
-import { MockFunctionMetadata, ModuleMocker } from "jest-mock";
 import { AuthModule } from "../auth/auth.module";
 import { ConfigService } from "@nestjs/config";
 import { mock, mockReset } from 'jest-mock-extended';
-import { JwtDecoded } from "../auth/types/JwtDecoded";
 import { AuthService } from "../auth/auth.service";
 
-
-
-/**
- * Actually and end-to-end test testing the behaviour of joining a room and interacting inside of it
- */
-
-/**
- * @TODO consider view of second user when testing --> second socket
- * Alice & Bob, John Doe & Jane Doe
- */
 describe('RoomsGateway', () => {
   
-  // We mock the AppService with one simple step and get a default empty implementation
   const authServiceMock = mock<AuthService>();
 
   let service: RoomsService;
