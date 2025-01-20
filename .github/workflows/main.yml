@@ -23,10 +23,11 @@ jobs:
           - name: '[API] Build Docker Image'
             run: |
               # TODO: build directly via command using build args
-              docker push ghcr.io/nils-s-dev/website-astro:latest
+              docker build api -t ghcr.io/nils-s-dev/pointing-poker-api:latest --build-arg JWT_SECRET=${{ secrets.SHARED_SECRET }} --build-arg ORIGIN=${{ vars.CLIENT_URL }}
+              docker push ghcr.io/nils-s-dev/pointing-poker-api:latest
 
           - name: '[Client] Build Docker Image'
             run: |
               # TODO: build directly via command using build args
-              docker build . --tag ghcr.io/nils-s-dev/website-astro:latest
-              docker push ghcr.io/nils-s-dev/website-astro:latest
+              docker build client -t ghcr.io/nils-s-dev/pointing-poker-client:latest --build-arg API_URL=${{ vars.API_URL }}
+              docker push ghcr.io/nils-s-dev/pointing-poker-client:latest
