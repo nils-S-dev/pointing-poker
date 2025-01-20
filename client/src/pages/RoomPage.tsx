@@ -28,7 +28,7 @@ function RoomPage() {
 
         if(!isReady) return;
 
-        socket.current = io(import.meta.env.VITE_API_URL)
+        socket.current = io(import.meta.env.VITE_API_URL, { transports: ['websocket', 'polling']})
 
         socket.current.connect();
 
