@@ -1,0 +1,32 @@
+name: Deploy Images to GHCR
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+      push-image:
+        runs-on: ubuntu-latest
+        steps:
+          - name: 'Checkout GitHub Action'
+            uses: actions/checkout@main
+
+          - name: 'Login to GitHub Container Registry'
+            uses: docker/login-action@v1
+            with:
+              registry: ghcr.io
+              username: ${{github.actor}}
+              password: ${{ secrets.TOKEN }}
+
+          - name: '[API] Build Docker Image'
+            run: |
+              # TODO: build directly via command using build args
+              docker push ghcr.io/nils-s-dev/website-astro:latest
+
+          - name: '[Client] Build Docker Image'
+            run: |
+              # TODO: build directly via command using build args
+              docker build . --tag ghcr.io/nils-s-dev/website-astro:latest
+              docker push ghcr.io/nils-s-dev/website-astro:latest

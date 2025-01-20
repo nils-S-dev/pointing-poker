@@ -9,7 +9,7 @@ import { User } from "./types/User";
 import { AuthService } from "../auth/auth.service";
 
 @WebSocketGateway({ cors: process.env.NODE_ENV !== "production" ? true : {
-    origin: process.env.CLIENT_URL
+    origin: process.env.ORIGIN
   } })
 export class RoomsGateway {
 

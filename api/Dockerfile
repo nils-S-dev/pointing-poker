@@ -1,11 +1,16 @@
 FROM node:22-alpine
 
+ARG JWT_SECRET
+ARG ORIGIN
+
 WORKDIR /app
 
 COPY . .
 
 RUN npm i
 
+ENV JWT_SECRET $JWT_SECRET
+ENV ORIGIN $ORIGIN
 ENV NODE_ENV production
 
 RUN npm run build
