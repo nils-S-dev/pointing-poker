@@ -10,7 +10,7 @@ import { AuthService } from "../auth/auth.service";
 import { JwtDecoded } from "@/auth/types/JwtDecoded";
 
 @WebSocketGateway({ cors: process.env.NODE_ENV !== "production" ? true : {
-    origin: process.env.CLIENT_URL
+    origin: process.env.ORIGIN
   } })
 export class RoomsGateway {
 

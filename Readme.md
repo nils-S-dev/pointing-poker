@@ -89,7 +89,7 @@ Make sure Docker is installed and the Docker Daemon is running
 In the project root you will find a `docker-compose-template.yaml` file.
 
 1. Copy it and rename it `docker-compose.yaml` or anything else that suits your case
-2. Adapt the environment variables defined for the `api` service. Make `JWT_SECRET` any randowm string feasible for encoding JSON Web Tokens. Make `CLIENT_URL` the URL where you want to host the application client (required for CORS).
+2. Adapt the environment variables defined for the `api` service. Make `JWT_SECRET` any randowm string feasible for encoding JSON Web Tokens. Make `ORIGIN` the URL where you want to host the application client (required for CORS).
 3. Adapt the build arguments defined for the `client` service. Make `API_URL` the URL where you want to host the application server.
 
 if required you can make adaptions to the Nginx configuration used for the React client at `./client/nginx/local.conf`
