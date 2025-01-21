@@ -27,8 +27,8 @@ function RoomPage() {
     useEffect(() => {
 
         if(!isReady) return;
-
-        socket.current = io(import.meta.env.VITE_API_URL, { transports: ['websocket', 'polling'], path: "/rooms/gateway" })
+        
+        socket.current = io(import.meta.env.VITE_WS_URL, { transports: ['websocket', 'polling'], path: `${import.meta.env.VITE_WS_PREFIX ?? ""}/rooms/gateway` })
 
         socket.current.connect();
 

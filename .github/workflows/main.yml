@@ -29,5 +29,5 @@ jobs:
           - name: '[Client] Build Docker Image'
             run: |
               # TODO: build directly via command using build args
-              docker build client -t ghcr.io/nils-s-dev/pointing-poker-client:latest --build-arg API_URL=${{ vars.API_URL }}
+              docker build client -t ghcr.io/nils-s-dev/pointing-poker-client:latest --build-arg API_URL=${{ vars.API_URL }} --build-arg WS_URL=${{ vars.WS_URL }} --build-arg WS_PREFIX=${{ vars.WS_PREFIX }}
               docker push ghcr.io/nils-s-dev/pointing-poker-client:latest

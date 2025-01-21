@@ -15,7 +15,7 @@ export class RoomsController {
 
   @Get("health")
   health(): string {
-    return `${this.configService.get<string>('JWT_SECRET')} ${this.configService.get<string>('ORIGIN')}`;
+    return `${this.configService.get<string>('JWT_SECRET')} ${this.configService.get<string>('ORIGIN')} `;
   }
 
   @Post()

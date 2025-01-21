@@ -20,6 +20,8 @@ services:
       context: ./client
       args:
         - API_URL=http://api.poker.localhost:3000
+        - WS_URL=http://api.poker.localhost:3000
+        - WS_PREFIX=/api
     ports:
       - "80:80"
     depends_on:
