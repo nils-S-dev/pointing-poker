@@ -18,7 +18,7 @@ function HomePage() {
     const navigate = useNavigate()
 
     const createRoom = () => {
-        fetch(`${import.meta.env.VITE_API_URL}/rooms`, { 
+        fetch(`${import.meta.env.VITE_API_URL}/api/rooms`, { 
             method: "POST", 
             headers: {
                 "Content-Type": "application/json"
