@@ -14,7 +14,7 @@ function JoinPage() {
     const room = searchParams.get("room");
 
     const joinRoom = () => {
-        fetch(`${import.meta.env.VITE_API_URL}/api/auth`, { 
+        fetch(`${import.meta.env.VITE_API_URL}/auth`, { 
             method: "POST", 
             headers: {
                 "Content-Type": "application/json"
