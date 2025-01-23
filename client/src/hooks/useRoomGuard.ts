@@ -7,7 +7,6 @@ import { tokenStorage } from "../util/StorageUtil";
 import { useNavigate, useParams } from "react-router";
 import { API_URL } from "../constants/api";
 
-/** Custom Implementation of Something an in-component-route-guard would be  */
 export function useRoomGuard(): boolean {
 
     const [ok, setOk] = useState(false);
@@ -22,14 +21,18 @@ export function useRoomGuard(): boolean {
             navigate(`/join?room=${room}`)
         }
 
-        fetch(`${API_URL}/auth/validate`, {
+        /**
+         * @TODO make fetch to check if room exists. If not --> redirect to startpage
+         */
+
+        fetch(`${API_URL}/auth/validate/${room}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         })
         .then(res => res.json())
         .then((res) => {
-            if (res.statusCode !== 401) {
+            if (![401, 403].includes(res.statusCode)) {
                 return setOk(true);
             }
             navigate(`/join?room=${room}`)

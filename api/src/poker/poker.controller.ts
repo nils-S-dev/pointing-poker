@@ -31,7 +31,7 @@ export class RoomsController {
   }> {
     const room = this.roomsService.create(procedure) 
     return {
-      token: await this.authService.signIn(user, this.roomsService.create(procedure).getName()),
+      token: await this.authService.signIn(user, room.getName()),
       room
     }
   }
