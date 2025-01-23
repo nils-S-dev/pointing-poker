@@ -18,6 +18,12 @@ export class RoomsController {
     return `${this.configService.get<string>('JWT_SECRET')} ${this.configService.get<string>('ORIGIN')} `;
   }
 
+
+  @Get("debug")
+  debug() {
+    return this.roomsService.getAll();
+  }
+
   @Post()
   async create(@Body() { user, procedure }: CreateRoomDto): Promise<{
     token: string,
