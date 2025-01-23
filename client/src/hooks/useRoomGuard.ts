@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import { tokenStorage } from "../util/StorageUtil";
 import { useNavigate, useParams } from "react-router";
+import { API_URL } from "../constants/api";
 
 /** Custom Implementation of Something an in-component-route-guard would be  */
 export function useRoomGuard(): boolean {
@@ -21,7 +22,7 @@ export function useRoomGuard(): boolean {
             navigate(`/join?room=${room}`)
         }
 
-        fetch(`${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_WS_PREFIX}/auth/validate`, {
+        fetch(`${API_URL}/auth/validate`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }

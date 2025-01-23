@@ -13,12 +13,8 @@ COPY . .
 
 # write to production env as Vite will use this one for building
 ARG API_URL
-ARG WS_URL
-ARG WS_PREFIX
 RUN touch .env.production
 RUN echo "VITE_API_URL=$API_URL" >> .env.production
-RUN echo "VITE_WS_URL=$WS_URL" >> .env.production
-RUN echo "VITE_WS_PREFIX=$WS_PREFIX" >> .env.production
 
 # Build the React app for production
 RUN npm run build:prod

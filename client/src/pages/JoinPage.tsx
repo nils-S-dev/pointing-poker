@@ -5,6 +5,7 @@ import Headline from "../components/partials/Headline";
 import Button from "../components/partials/Button";
 import { tokenStorage } from "../util/StorageUtil";
 import TextField from "../components/partials/fields/TextField";
+import { API_URL } from "../constants/api";
 
 function JoinPage() {
 
@@ -14,7 +15,7 @@ function JoinPage() {
     const room = searchParams.get("room");
 
     const joinRoom = () => {
-        fetch(`${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_WS_PREFIX}/auth`, { 
+        fetch(`${API_URL}/auth`, { 
             method: "POST", 
             headers: {
                 "Content-Type": "application/json"

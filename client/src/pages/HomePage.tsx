@@ -9,6 +9,7 @@ import DropdownField from "../components/partials/fields/DropdownField";
 import { tokenStorage } from "../util/StorageUtil";
 import Section from "../components/partials/Section";
 import TextField from "../components/partials/fields/TextField";
+import { API_URL } from "../constants/api";
 
 function HomePage() {
 
@@ -18,7 +19,7 @@ function HomePage() {
     const navigate = useNavigate()
 
     const createRoom = () => {
-        fetch(`${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_WS_PREFIX}/rooms`, { 
+        fetch(`${API_URL}/rooms`, { 
             method: "POST", 
             headers: {
                 "Content-Type": "application/json"

@@ -9,7 +9,7 @@ import { User } from "./types/User";
 import { AuthService } from "../auth/auth.service";
 
 /** @TODO always allow CORS for debugging purposes **/
-@WebSocketGateway(0, { path: "/rooms/gateway", transports: ['websocket', 'polling'], cors: process.env.NODE_ENV !== "production" || process.env.NODE_ENV === "production"  ? true : {
+@WebSocketGateway(0, { path: "/api/v1/rooms/gateway", transports: ['websocket', 'polling'], cors: process.env.NODE_ENV !== "production" ? true : {
     origin: process.env.ORIGIN
   } })
 export class RoomsGateway {
