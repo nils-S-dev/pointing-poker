@@ -21,7 +21,7 @@ export function useRoomGuard(): boolean {
             navigate(`/join?room=${room}`)
         }
 
-        fetch(`${import.meta.env.VITE_API_URL}/${import.meta.env.WS_PREFIX}/auth/validate`, {
+        fetch(`${import.meta.env.VITE_API_URL}/${import.meta.env.VITE_WS_PREFIX}/auth/validate`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
