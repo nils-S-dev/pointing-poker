@@ -8,7 +8,8 @@ import { Optional } from "@/types/Optional";
 import { User } from "./types/User";
 import { AuthService } from "../auth/auth.service";
 
-@WebSocketGateway(0, { path: "/rooms/gateway", transports: ['websocket', 'polling'], cors: process.env.NODE_ENV !== "production" ? true : {
+/** @TODO always allow CORS for debugging purposes **/
+@WebSocketGateway(0, { path: "/rooms/gateway", transports: ['websocket', 'polling'], cors: process.env.NODE_ENV !== "production" || process.env.NODE_ENV === "production"  ? true : {
     origin: process.env.ORIGIN
   } })
 export class RoomsGateway {
