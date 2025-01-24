@@ -11,7 +11,6 @@ function Message({ id, text, onEnd }: Props) {
             <div className="w-full h-px bg-sky-700"></div>
         </li>
     )
-
 }
 
 export default Message
