@@ -7,10 +7,10 @@ function Header() {
                 <h1 className="text-xl"><Link to="/">Scrum Poker</Link><span className="text-lg text-steel-50 ml-[6px]">by Nils</span></h1>
                 <ul className="gap-3 hidden lg:flex">
                     <li>
-                        <Link to="/imprint" className="text-steel-50 transition-colors hover:text-sky">Imprint</Link>
+                        <a href="https://nils-siemsen.de/imprint" className="text-steel-50 transition-colors hover:text-sky">Imprint</a>
                     </li>
                     <li>
-                        <Link to="/data-privacy" className="text-steel-50 transition-colors hover:text-sky">Data Privacy</Link>
+                        <a href="https://nils-siemsen.de/privacy" className="text-steel-50 transition-colors hover:text-sky">Data Privacy</a>
                     </li>
                 </ul>
             </nav>

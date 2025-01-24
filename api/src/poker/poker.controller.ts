@@ -13,6 +13,7 @@ export class RoomsController {
     private readonly configService: ConfigService
   ) {}
 
+  /**
   @Get("health")
   health(): string {
     return `${this.configService.get<string>('JWT_SECRET')} ${this.configService.get<string>('ORIGIN')} `;
@@ -23,6 +24,7 @@ export class RoomsController {
   debug() {
     return this.roomsService.getAll();
   }
+  */
 
   @Post()
   async create(@Body() { user, procedure }: CreateRoomDto): Promise<{
