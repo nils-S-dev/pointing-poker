@@ -7,5 +7,5 @@
  */
 export interface EstimationOption {
     label: string;
-    numeric: number;
+    value: number;
 }

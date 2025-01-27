@@ -48,9 +48,10 @@ describe('RoomGateway', () => {
     ioClient = io.io("http://localhost:3000", {
       autoConnect: false,
       transports: ["websocket", "polling"],
+      path: "/api/v1/rooms/gateway"
     });
 
-    room = service.create(Procedure.FIBONACCI, MOCK_ROOM_NAME);
+    room = service.create("my-custom-procedure", MOCK_ROOM_NAME);
 
     ioClient.connect();
 
@@ -64,20 +65,6 @@ describe('RoomGateway', () => {
   beforeEach(() => {
     mockReset(authServiceMock);
   });
-
-  describe('[Event] `debug`', () => {
-
-    it('should respond', async () => {
-      ioClient.emit(Events.DEBUG);
-      await new Promise<void>((resolve) => {
-        ioClient.on(Events.DEBUG, () => {
-          expect(true).toBeTruthy();
-          resolve();
-        });
-      });
-    })
-
-  })
 
   describe("[Event] `join`", () => {
 

@@ -1,17 +1,22 @@
-import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { RoomsService } from "./room.service";
 import { Room } from "./types/Room";
-import { Logger } from "@nestjs/common";
+import { Logger, UseFilters } from "@nestjs/common";
 import { Events } from "./types/enum/Events";
 import { Optional } from "@/types/Optional";
 import { User } from "./types/User";
 import { AuthService } from "../auth/auth.service";
+import { WebsocketExceptionFilter } from "./filter/WebsocketExceptionFilter";
 
-/** @TODO always allow CORS for debugging purposes **/
-@WebSocketGateway(0, { path: "/api/v1/rooms/gateway", transports: ['websocket', 'polling'], cors: process.env.NODE_ENV !== "production" ? true : {
-    origin: process.env.ORIGIN
-  } })
+@WebSocketGateway(0, { 
+    path: "/api/v1/rooms/gateway", 
+    transports: ['websocket', 'polling'], 
+    cors: process.env.NODE_ENV !== "production" ? true : {
+        origin: process.env.ORIGIN
+    }
+})
+@UseFilters(new WebsocketExceptionFilter())
 export class RoomsGateway {
 
     constructor(
@@ -24,7 +29,7 @@ export class RoomsGateway {
     private logger = new Logger('RoomsGateway');
 
     handleDisconnect(@ConnectedSocket() socket: Socket) {
-        console.log("DISCONNECT!!!", socket.id);
+        this.handleLeave(socket);
     }
 
     @SubscribeMessage(Events.JOIN)
@@ -33,7 +38,6 @@ export class RoomsGateway {
         @ConnectedSocket() socket: Socket,
     ) {
         const { room: roomName, user: userName } = this.readToken(token);
-
         this.logger.log(`JOIN | User ${socket.id} (${userName}) joins room ${roomName}`)
 
         // Fix for refreshing / rejoining: When using the same token the "old" user should be kicked and replaced
@@ -100,14 +104,15 @@ export class RoomsGateway {
     @SubscribeMessage(Events.LEAVE)
     async handleLeave(@ConnectedSocket() socket: Socket) {
         const room: Room = this.roomsService.getRoom(socket);
+        if (!room) return;
         const user: Optional<User> = room.findUser(socket.id);
-        this.logger.log(`RESET | User ${user?.name} leaves ${room}`);
+        this.logger.log(`LEAVE | User ${user?.name} leaves ${room}`);
+        await this.server.in(socket.id).socketsLeave(room.getName())
+        room.removeUser(socket.id);
         this.server.to(room.getName()).emit(Events.LEAVE, {
             user,
             room
         });
-        await this.server.in(socket.id).socketsLeave(room.getName())
-        room.removeUser(socket.id)
     }
 
     // for testability

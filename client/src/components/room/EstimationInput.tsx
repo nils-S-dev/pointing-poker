@@ -13,7 +13,7 @@ function EstimationInput({ onClick, className }: Props) {
     return (
             <div className={ `flex flex-col md:items-start ${ className }` }>
                 <Headline.h3 className="hidden mb-6 md:block">Make Estimation</Headline.h3>
-                <InputField type="number" name="name" state={ [value, setValue] }>Estimation</InputField>
+                <InputField type="number" name="name" state={ [value, setValue] }></InputField>
                 <Button.default onClick={ () => onClick(parseInt(value)) }>Estimate</Button.default>
             </div>
     )
