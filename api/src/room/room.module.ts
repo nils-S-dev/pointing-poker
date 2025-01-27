@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { RoomsGateway } from './poker.gateway';
-import { RoomsService } from './poker.service';
-import { RoomsController } from './poker.controller';
+import { RoomsGateway } from './room.gateway';
+import { RoomsService } from './room.service';
+import { RoomController } from './room.controller';
 import { AuthModule } from '@/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 
@@ -15,7 +15,7 @@ import { ConfigModule } from '@nestjs/config';
         RoomsService
     ],
     controllers: [
-        RoomsController
+        RoomController
     ]
 })
-export class PokerModule {}
+export class RoomModule {}

@@ -19,16 +19,18 @@ function DropdownField<T>({ className, state, children, placeholder = "...", opt
         setIsOpen(false);
     })
 
+    const choose = (option: DropdownOption<T>) => {
+        setS(option);
+        setIsOpen(false);
+    }
+
     return (
         <div ref={ container } className={ `flex flex-col w-full gap-2 mb-3 ${ className }` }>
             <label className="font-bold" htmlFor={ name }>{ children }</label>
             <div 
                 id={ name }
                 className={ `w-full max-w-[400px] px-3 py-2 h-10 cursor-pointer bg-steel-100 text-steel-800 relative flex items-center justify-start rounded ${ isOpen ? 'rounded-b-none' : '' }`}
-                onClick={ () => setIsOpen(!isOpen) }    
-                tabIndex={ 0 }
-                onFocus={ () => setIsOpen(true) }
-                onBlur={ () => setIsOpen(false) }
+                onClick={ () => setIsOpen(!isOpen) }
             >
                 <span>{ s?.label ?? placeholder }</span>
                 <span className={ `text-xl transition-transform absolute top-1/2 right-4 -translate-y-1/2 ${ isOpen ? 'rotate-90' : '-rotate-90' }` }>❯</span>
@@ -39,7 +41,7 @@ function DropdownField<T>({ className, state, children, placeholder = "...", opt
                                 tabIndex={ isOpen ? 0 : 1 } 
                                 key={ option.label }
                                 className="w-full text-left px-3 py-2 transition-colors coursor-pointer hover:bg-steel-50 hover:text-steel-700" 
-                                onClick={ () => setS(option) }>
+                                onClick={ () => choose(option) }>
                                     { option.label }
                             </li>
                         ))

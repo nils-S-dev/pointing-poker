@@ -4,7 +4,6 @@ import { Socket } from 'socket.io';
 import { Optional } from '@/types/Optional';
 import { Room } from './types/Room';
 import { User } from './types/User';
-import { Procedure } from './types/enum/Procedure';
 
 @Injectable()
 export class RoomsService {
@@ -15,7 +14,7 @@ export class RoomsService {
     return this.rooms;
   }
 
-  create(procedure: Procedure, name?: string): Room {
+  create(procedure: string, name?: string): Room {
     // rooms created by this application are prefixed by $ in order to differentiate them from the default room
     const room = new Room(
       name || `$-${uniqueNamesGenerator({

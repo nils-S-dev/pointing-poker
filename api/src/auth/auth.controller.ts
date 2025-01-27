@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, UseGuards, Request, Param, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
-import { SignInDto } from './dto/SignInDto';
+import { GetTokenDto } from './dto/SignInDto';
 import { RoomMismatchException } from './exception/RoomMismatchException';
 
 @Controller('auth')
@@ -12,9 +12,9 @@ export class AuthController {
     ) {}
 
     @Post()
-    async signIn(@Body() { user, room }: SignInDto) {
+    async getToken(@Body() { user, room }: GetTokenDto) {
       return {
-        token: await this.authService.signIn(user, room)
+        token: await this.authService.getToken(user, room)
       };
     }
 

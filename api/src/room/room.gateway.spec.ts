@@ -1,19 +1,18 @@
 import * as io from "socket.io-client";
 import { Events } from "./types/enum/Events";
-import { RoomsGateway } from "./poker.gateway";
+import { RoomsGateway } from "./room.gateway";
 import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import { RoomsService } from "./poker.service";
-import { RoomsController } from "./poker.controller";
+import { RoomsService } from "./room.service";
+import { RoomController } from "./room.controller";
 import { Room } from "./types/Room";
 import { User } from "./types/User";
-import { Procedure } from "./types/enum/Procedure";
 import { AuthModule } from "../auth/auth.module";
 import { ConfigService } from "@nestjs/config";
 import { mock, mockReset } from 'jest-mock-extended';
 import { AuthService } from "../auth/auth.service";
 
-describe('RoomsGateway', () => {
+describe('RoomGateway', () => {
   
   const authServiceMock = mock<AuthService>();
 
@@ -31,7 +30,7 @@ describe('RoomsGateway', () => {
     // Instantiate the app
     const moduleFixture = await Test.createTestingModule({
       imports: [AuthModule],
-      controllers: [RoomsController],
+      controllers: [RoomController],
       providers: [RoomsGateway, RoomsService, ConfigService],
     })
     .overrideProvider(AuthService) // override the dependency with the mocked version

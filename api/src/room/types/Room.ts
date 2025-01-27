@@ -1,11 +1,10 @@
 import { Optional } from "@/types/Optional";
 import { User } from "./User";
-import { Procedure } from "./enum/Procedure";
 export class Room {
 
     constructor(
         private name: string,
-        private procedure: Procedure,
+        private procedure: string,
         private users: Array<User> = new Array(),
         private revealed: boolean = false
     ) {}

@@ -1,6 +1,6 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
-import { RoomsService } from "./poker.service";
+import { RoomsService } from "./room.service";
 import { Room } from "./types/Room";
 import { Logger } from "@nestjs/common";
 import { Events } from "./types/enum/Events";
@@ -22,6 +22,10 @@ export class RoomsGateway {
     @WebSocketServer() server: Server;
 
     private logger = new Logger('RoomsGateway');
+
+    handleDisconnect(@ConnectedSocket() socket: Socket) {
+        console.log("DISCONNECT!!!", socket.id);
+    }
 
     @SubscribeMessage(Events.JOIN)
     async handleJoin(
