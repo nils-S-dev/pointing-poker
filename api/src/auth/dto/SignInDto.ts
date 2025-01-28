@@ -1,4 +1,10 @@
+import { IsNotEmpty } from "class-validator";
+
 export class GetTokenDto {
-    readonly user: string;
-    readonly room: string;
+
+    @IsNotEmpty()
+    user: string;
+
+    @IsNotEmpty()
+    room: string;
 }
