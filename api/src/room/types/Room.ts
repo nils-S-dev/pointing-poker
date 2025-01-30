@@ -15,17 +15,27 @@ export class Room {
     }
 
     findUser(socketId: string): Optional<User> {
-        return this.users.find(user => user.socketId === socketId);
+        return this.users.find(user => user.getSocketId() === socketId);
     }
 
     findUserByToken(token: string): Optional<User> {
-        return this.users.find(user => user.token === token);
+        return this.users.find(user => user.getToken() === token);
     }
 
     removeUser(socketId: string): Room {
-        this.users = this.users.filter((user: User) => user.socketId !== socketId);
+        this.users = this.users.filter((user: User) => user.getSocketId() !== socketId);
         return this;
     }
+
+    estimate(socketId: string, estimation: number): User {
+        const user = this.findUser(socketId);
+        user.setEstimation(estimation);
+        // auto reveal when everyone has estimated
+        if (this.getUsers().every(user => user.getEstimation() !== undefined)) {
+            this.reveal();
+        }
+        return user;
+      }
 
     reveal(): Room {
         this.revealed = true;
@@ -34,15 +44,16 @@ export class Room {
 
     reset(): Room {
         this.revealed = false;
-        this.users = this.users.map((user: User) => ({
-            ...user,
-            estimation: undefined
-        }))
+        this.users.forEach(user => user.setEstimation(undefined))
         return this;
     }
 
     getName(): string {
         return this.name;
+    }
+
+    getProcedure(): string {
+        return this.procedure;
     }
 
     getUsers(): Array<User> {

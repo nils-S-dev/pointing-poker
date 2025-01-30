@@ -9,7 +9,7 @@ export class AuthService {
         private jwtService: JwtService
     ) { }
 
-    async getToken(
+    async encode(
         user: string,
         room: string,
     ): Promise<string> {

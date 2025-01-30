@@ -1,6 +1,6 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
-import { RoomsService } from "./room.service";
+import { RoomService } from "./room.service";
 import { Room } from "./types/Room";
 import { Logger, UseFilters } from "@nestjs/common";
 import { Events } from "./types/enum/Events";
@@ -20,7 +20,7 @@ import { WebsocketExceptionFilter } from "./filter/WebsocketExceptionFilter";
 export class RoomsGateway {
 
     constructor(
-        private readonly roomsService: RoomsService,
+        private readonly roomsService: RoomService,
         private readonly authService: AuthService
     ) {}
 
@@ -44,14 +44,11 @@ export class RoomsGateway {
         let room: Optional<Room> = this.roomsService.getRoomByName(roomName)
         const existingUser: Optional<User> = room?.findUserByToken(token)
         if (existingUser) {
-            await this.server.in(existingUser.socketId).socketsLeave(roomName)
-            existingUser.socketId = socket.id
+            // fixes an issue causing duplicate users to appear, e.g. when reconnecting
+            await this.server.in(existingUser.getSocketId()).socketsLeave(roomName)
+            existingUser.setSocketId(socket.id)
         } else {
-            room = this.roomsService.join(roomName, {
-                name: userName,
-                socketId: socket.id,
-                token
-            });
+            room = this.roomsService.join(roomName, new User(userName, socket.id, token));
     
             this.logger.log(`${socket.id} (${userName}) joined ${room.getName()}`)
         }
@@ -69,8 +66,8 @@ export class RoomsGateway {
     ) {
         const room = this.roomsService.getRoom(socket);
         const user = room.findUser(socket.id);
-        this.logger.log(`ESTIMATE | User ${user.name} estimates ${estimation} in ${room.getName()}`);
-        this.roomsService.estimate(room, socket.id, estimation);
+        this.logger.log(`ESTIMATE | User ${user.getName()} estimates ${estimation} in ${room.getName()}`);
+        room.estimate(socket.id, estimation);
         this.server.to(room.getName()).emit(Events.ESTIMATE, {
             user,
             room
@@ -81,7 +78,7 @@ export class RoomsGateway {
     handleReveal(@ConnectedSocket() socket: Socket) {
         const room: Room = this.roomsService.getRoom(socket);
         const user = room.findUser(socket.id);
-        this.logger.log(`REVEAL | User ${user.name} reveals ${room}`);
+        this.logger.log(`REVEAL | User ${user.getName()} reveals ${room}`);
         room.reveal();
         this.server.to(room.getName()).emit(Events.REVEAL, {
             user,
@@ -93,7 +90,7 @@ export class RoomsGateway {
     handleReset(@ConnectedSocket() socket: Socket) {
         const room: Room = this.roomsService.getRoom(socket);
         const user = room.findUser(socket.id);
-        this.logger.log(`RESET | User ${user.name} resets ${room}`);
+        this.logger.log(`RESET | User ${user.getName()} resets ${room}`);
         room.reset();
         this.server.to(room.getName()).emit(Events.RESET, {
             user,
@@ -106,7 +103,7 @@ export class RoomsGateway {
         const room: Room = this.roomsService.getRoom(socket);
         if (!room) return;
         const user: Optional<User> = room.findUser(socket.id);
-        this.logger.log(`LEAVE | User ${user?.name} leaves ${room}`);
+        this.logger.log(`LEAVE | User ${user?.getName()} leaves ${room}`);
         await this.server.in(socket.id).socketsLeave(room.getName())
         room.removeUser(socket.id);
         this.server.to(room.getName()).emit(Events.LEAVE, {

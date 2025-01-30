@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { adjectives, colors, starWars, uniqueNamesGenerator } from 'unique-names-generator';
 import { Socket } from 'socket.io';
 import { Optional } from '@/types/Optional';
@@ -6,9 +6,15 @@ import { Room } from './types/Room';
 import { User } from './types/User';
 
 @Injectable()
-export class RoomsService {
+export class RoomService {
 
     private rooms: Array<Room> = new Array();
+
+    private logger = new Logger('RoomsGateway');
+
+  setRooms(r: Array<Room>): Array<Room> {
+    return (this.rooms = r, this.rooms);
+  }
 
   getAll(): Array<Room> {
     return this.rooms;
@@ -34,21 +40,14 @@ export class RoomsService {
     return room;
   }
 
-  leave(name: string, user: User): Room {
+  leave(name: string, user: User): Optional<Room> {
     const room: Optional<Room> = this.getRoomByName(name);
-    room.removeUser(user.socketId)
-    return room;
-  }
-
-  /** @TODO make method of room **/
-  estimate(room: Room, socketId: string, estimation: number): User {
-    const user = room.findUser(socketId);
-    user.estimation = estimation;
-    // auto reveal when everyone has estimated
-    if (room.getUsers().every(user => user.estimation !== undefined)) {
-      room.reveal();
+    room.removeUser(user.getSocketId());
+    if (room.getUsers().length < 1) {
+      // remove empty rooms
+      this.rooms.filter(r => r.getName() !== room.getName())
     }
-    return user;
+    return room;
   }
 
   getRoomName(socket: Socket): Optional<string> {

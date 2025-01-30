@@ -26,10 +26,10 @@ describe('AuthService', () => {
     jwtService = moduleRef.get(JwtService);
   });
 
-  describe("getToken", () => {
+  describe("encode", () => {
 
     it("should sign the payload into a JSON-Web-Token", async () => {
-      const token = await authService.getToken(USER, ROOM);
+      const token = await authService.encode(USER, ROOM);
       const { user, room } = await jwtService.decode(token)
       expect(user).toBe(USER)
       expect(room).toBe(ROOM)

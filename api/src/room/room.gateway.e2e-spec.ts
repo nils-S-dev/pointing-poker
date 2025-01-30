@@ -3,7 +3,7 @@ import { Events } from "./types/enum/Events";
 import { RoomsGateway } from "./room.gateway";
 import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import { RoomsService } from "./room.service";
+import { RoomService } from "./room.service";
 import { RoomController } from "./room.controller";
 import { Room } from "./types/Room";
 import { User } from "./types/User";
@@ -16,7 +16,7 @@ describe('RoomGateway', () => {
   
   const authServiceMock = mock<AuthService>();
 
-  let service: RoomsService;
+  let service: RoomService;
 
   let app: INestApplication;
   let ioClient: io.Socket;
@@ -31,7 +31,7 @@ describe('RoomGateway', () => {
     const moduleFixture = await Test.createTestingModule({
       imports: [AuthModule],
       controllers: [RoomController],
-      providers: [RoomsGateway, RoomsService, ConfigService],
+      providers: [RoomsGateway, RoomService, ConfigService],
     })
     .overrideProvider(AuthService) // override the dependency with the mocked version
     .useValue(authServiceMock)
@@ -42,7 +42,7 @@ describe('RoomGateway', () => {
     app.listen(3000);
 
     // Get the service instance from the app instance
-    service = app.get<RoomsService>(RoomsService);
+    service = app.get<RoomService>(RoomService);
 
     // Create a new client that will interact with the gateway
     ioClient = io.io("http://localhost:3000", {
@@ -141,7 +141,7 @@ describe('RoomGateway', () => {
         ioClient.on(Events.RESET, (data) => {
           expect(data.user.name).toBe(MOCK_USER_NAME);
           expect(data.room.revealed).toBe(false);
-          expect(data.room.users.find((user: User) => !!user.estimation)).toBeFalsy()
+          expect(data.room.users.find((user: { estimation: number }) => !!user.estimation)).toBeFalsy()
           resolve();
         });
       });

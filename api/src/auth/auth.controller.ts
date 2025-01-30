@@ -14,7 +14,7 @@ export class AuthController {
     @Post()
     async getToken(@Body() { user, room }: GetTokenDto) {
       return {
-        token: await this.authService.getToken(user, room)
+        token: await this.authService.encode(user, room)
       };
     }
 

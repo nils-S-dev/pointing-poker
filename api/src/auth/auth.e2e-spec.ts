@@ -4,7 +4,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AuthModule } from './auth.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 
-describe.only('Auth', () => {
+describe('Auth', () => {
   let app: INestApplication;
   let jwtService = {
     signAsync: (payload) => Promise.resolve(TOKEN),
