@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  pointing-poker_api:
+    image: ghcr.io/nils-s-dev/pointing-poker-api:latest
+    container_name: pointing-poker_api
+    networks:
+      - net
+  pointing-poker_client:
+    image: ghcr.io/nils-s-dev/pointing-poker-client:latest
+    container_name: pointing-poker_client
+    depends_on:
+      - pointing-poker_api
+    networks:
+      - net
+      
+networks:
+  net:

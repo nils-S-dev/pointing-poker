@@ -1,18 +1,10 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a id="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
 
-  <h3 align="center">Pointing Poker</h3>
+  <h1 align="center">Pointing Poker</h1>
 
   <p align="center">
     A simple implementation of a Scrum poker usable for estimations and refinements powered by Socket.io
@@ -31,19 +23,20 @@
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#setup">Setup</a></li>
-        <li><a href="#startup">Startup</a></li>
-      </ul>
-    </li>
-    <li>
       <a href="#local-development">Local Development</a>
       <ul>
         <li><a href="#api">API</a></li>
         <li><a href="#client">Client</a></li>
       </ul>
     </li>
+    <li>
+      <a href="#docker-setup">Docker Setup</a>
+      <ul>
+        <li><a href="#development">Development</a></li>
+        <li><a href="#production">Production</a></li>
+      </ul>
+    </li>
+    <li><a href="#adding-a-prodecure">Adding a Procedure</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
@@ -72,7 +65,7 @@ The application consists of a React frontend (`client` folder) fulfilling the ro
 ### Built With
 
 * [![Nest][Nest.js]][Nest-url]
-* [![Angular][Angular.io]][Angular-url]
+* [![Angular][React.js]][React-url]
 * [Socket.io](https://socket.io/)
 
 <p>(<a href="#readme-top">back to top</a>)</p>
@@ -80,33 +73,6 @@ The application consists of a React frontend (`client` folder) fulfilling the ro
 
 
 <!-- GETTING STARTED -->
-## Getting Started
-
-Make sure Docker is installed and the Docker Daemon is running
-
-### Setup
-
-In the project root you will find a `docker-compose-template.yaml` file.
-
-1. Copy it and rename it `docker-compose.yaml` or anything else that suits your case
-2. Adapt the environment variables defined for the `api` service. Make `JWT_SECRET` any randowm string feasible for encoding JSON Web Tokens. Make `ORIGIN` the URL where you want to host the application client (required for CORS).
-3. Adapt the build arguments defined for the `client` service. Make `API_URL` the URL where you want to host the application server.
-
-if required you can make adaptions to the Nginx configuration used for the React client at `./client/nginx/local.conf`
-
-### Startup
-
-After taking care of the neccessary preperations mentioned above you can now start the project using
-
-```
-docker compose up
-```
-
-or if your chose a custom name for your compose file
-```
-docker compose -f <YOUR-COMPOSE-FILE> up
-```
-
 ## Local Development
 
 ### API
@@ -165,21 +131,63 @@ npm run dev
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- ROADMAP -->
-## Roadmap
+## Docker Setup
 
-- [x] Add dibonacci estimation procedure
-- [x] Add custom input estimation procedure
-- [ ] Add imprint
-- [ ] Add data privacy
-- [ ] Make project fit for deployment via pipelines
-- [ ] Add T-Shirt Sizes Estimation Procedure
-- [ ] Add timer visible on top of screen when inside a session (room)
-- [ ] Add notifications indicating the latest event and the user who triggered it (e.b. "John Doe joined the room")
+Make sure Docker is installed and the Docker Daemon is running
+
+### Development
+
+In the project root you will find a `docker-compose-template.yaml` file. It is meant for local startup, evaluation and testing
+
+* For the `api` service in `args` make sure to provide a `JWT_SECRET`
+* For the `client` service in `args` make sure that `API_URL` points to where your API is running, which is `localhost:3000` by default
+
+if required you can make adaptions to the Nginx configuration used for the React client at `./client/nginx/local.conf`.
+
+You can start the project by executing
+
+```
+docker compose up
+```
+
+### Production
+
+In the project root there is a sample docker compose file that I am using for production: `docker-compose.production.yaml`. In order to use my approach you might follow these steps:
+
+* Build an push the docker images for `api` and `client` to the GitHub Container Registry (GHCR). I am doing this using a GitHub Action: `.github/workflows/main.yaml`. 
+* Make sure to configure the following <b>secrets</b> in Github:
+  * `SHARED_SECRET`: the secret used to encrypt JWTs
+  * `TOKEN`: Your GithHub Access Token with read and wright permissions on the registry 
+* Make sure to configure the following <b>variables</b> in GitHub:
+  * `API_URL`: The URL where the API is deployed
+  * `CLIENT_URL`: The URL where the client is deployed (required for CORS)
+* Make sure that on the machine you inted to deploy the docker images you are [authenticated with GHCR](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+<!-- ADDING A PROCEDURE -->
+## Adding a Procedure
+The application offers several procedures to do the estimation in the socket.io room, such as using the fibonacci sequence or T-shirt sizes. Feel free to add your own procdures by
+
+1. Creating a file in the `client/src/constants/procedures` directory and naming it to your procedure. Example: `fibonacci.ts`
+2. Make sure to export a variable of type `EstimationProcedure`. Assign a meaningful `name`, a `label` (shown in the dropdown menu) and a list of `options`. Those `options` can later be chosen for estimation. Each option must have a `label`, which is use to display the choice, and a `value`, which will at some point in the future be used to calculate metrics.
+3. In `client/src/constants/procedures` make sure you add your custom procedure to the `procedures` array using the exported variable of type EstimationProcedure you defined above.
+
+Feel free to contribute!
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ROADMAP -->
+## Roadmap
+
+- [x] Add fibonacci estimation procedure
+- [x] Add T-shirt sizes estimation procedure
+- [x] Add text input estimation procedure
+- [ ] Add timer visible on top of screen when inside a session (room)
+- [ ] Add notifications indicating the latest event and the user who triggered it (e.b. "John Doe joined the room")
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -204,7 +212,7 @@ Thanks A LOT to othneildrew for [this amazing README.md template](https://github
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
+[React.js]: https://shields.io/badge/react-black?logo=react&style=for-the-badge
+[React-url]: https://react.dev/
 [Nest.js]: https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white
 [Nest-url]: https://nestjs.com/

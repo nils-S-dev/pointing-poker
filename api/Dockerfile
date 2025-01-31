@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:22-alpine AS build
 
 ARG JWT_SECRET
 ARG ORIGIN
@@ -16,7 +16,17 @@ ENV NODE_ENV $NODE_ENV
 
 RUN npm run build
 
-# Start the server using the production build
-CMD [ "node", "dist/src/main.js" ]
+FROM node:22-alpine AS runner
+
+WORKDIR /app
+
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+
+RUN npm i
+
+COPY --from=build /app/dist /app/
+
+CMD ["node", "src/main.js" ]
 
 EXPOSE 3000
