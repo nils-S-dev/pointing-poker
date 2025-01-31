@@ -14,7 +14,7 @@ ENV JWT_SECRET $JWT_SECRET
 ENV ORIGIN $ORIGIN
 ENV NODE_ENV $NODE_ENV
 
-RUN ls
+RUN ls node_modules/@nestjs
 
 RUN npm run build
 
