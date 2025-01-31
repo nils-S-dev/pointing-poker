@@ -5,10 +5,10 @@ services:
     image: poker-api:latest
     container_name: poker-api
     build:
-      context: /api
+      context: ./api
       args:
-        - ORIGIN=<CUSTOM-JWT-SECRET>
-        - CLIENT_URL=<CUSTOM-CLIENT-URL>
+        - NODE_ENV=development
+        - JWT_SECRET=your-secret
     ports:
       - "3000:3000"
     networks:
@@ -17,9 +17,9 @@ services:
     image: poker-client:latest
     container_name: poker-client
     build:
-      context: /client
+      context: ./client
       args:
-        - API_URL=<CUSTOM-API-URL>
+        - API_URL=http://localhost:3000
     ports:
       - "5173:80"
     depends_on:

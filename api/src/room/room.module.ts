@@ -4,7 +4,6 @@ import { RoomService } from './room.service';
 import { RoomController } from './room.controller';
 import { AuthModule } from '@/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
     imports: [
