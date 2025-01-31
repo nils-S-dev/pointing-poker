@@ -14,6 +14,8 @@ ENV JWT_SECRET $JWT_SECRET
 ENV ORIGIN $ORIGIN
 ENV NODE_ENV $NODE_ENV
 
+RUN ls
+
 RUN npm run build
 
 FROM node:22-alpine AS runner
@@ -23,7 +25,7 @@ WORKDIR /app
 COPY package.json package.json
 COPY package-lock.json package-lock.json
 
-RUN npm i
+RUN npm i --omit=dev
 
 COPY --from=build /app/dist /app/
 
