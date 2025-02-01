@@ -21,10 +21,6 @@ export function useRoomGuard(): boolean {
             navigate(`/join?room=${room}`)
         }
 
-        /**
-         * @TODO make fetch to check if room exists. If not --> redirect to startpage
-         */
-
         fetch(`${API_URL}/auth/validate/${room}`, {
             headers: {
                 "Authorization": `Bearer ${token}`

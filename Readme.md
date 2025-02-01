@@ -184,6 +184,7 @@ Feel free to contribute!
 - [x] Add fibonacci estimation procedure
 - [x] Add T-shirt sizes estimation procedure
 - [x] Add text input estimation procedure
+- [ ] Add test step for api to github action
 - [ ] Add timer visible on top of screen when inside a session (room)
 - [ ] Add notifications indicating the latest event and the user who triggered it (e.b. "John Doe joined the room")
 
