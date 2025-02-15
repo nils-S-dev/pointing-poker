@@ -1,7 +1,7 @@
 import { MouseEventHandler, PropsWithChildren } from "react";
 
 interface Props extends PropsWithChildren {
-    onClick: MouseEventHandler<HTMLButtonElement>;
+    onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 export default {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Button from "../components/partials/Button";
 import Headline from "../components/partials/Headline";
 import { useNavigate } from "react-router";
@@ -11,6 +11,7 @@ import TextField from "../components/partials/fields/TextField";
 import { API_URL } from "../constants/api";
 import { EstimationProcedure } from "../types/EstimationProcedure";
 import { fibonacciProcedure } from "../constants/procedures/fibonacci";
+import FormContainer from "../components/partials/FormContainer";
 
 function HomePage() {
 
@@ -50,9 +51,11 @@ function HomePage() {
         <Section>
             <Headline.h2>Start Session</Headline.h2>
             <p className="mb-3">Start a new pointing poker session by choosing a name for yourself and pressing the button. You will be able to invite your colleagues once your session is set up.</p>
-            <TextField className="mb-3" type="text" name="name" state={ [name, setName] }>Your Name</TextField>
-            <DropdownField<string> name="procedure" state={ [procedureOption, setProcedureOption] } options={ dropdownOptions }>Estimation Procedure</DropdownField>
-            <Button.default onClick={ createRoom }>Go for it!</Button.default>
+            <FormContainer onSubmit={ createRoom }>
+                <TextField className="mb-3" type="text" name="name" state={ [name, setName] }>Your Name</TextField>
+                <DropdownField<string> name="procedure" state={ [procedureOption, setProcedureOption] } options={ dropdownOptions }>Estimation Procedure</DropdownField>
+                <Button.default>Go for it!</Button.default>
+            </FormContainer>
         </Section>
     )
 }

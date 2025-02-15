@@ -6,6 +6,7 @@ import Button from "../components/partials/Button";
 import { tokenStorage } from "../util/StorageUtil";
 import TextField from "../components/partials/fields/TextField";
 import { API_URL } from "../constants/api";
+import FormContainer from "../components/partials/FormContainer";
 
 function JoinPage() {
 
@@ -37,8 +38,10 @@ function JoinPage() {
         <Section>
             <Headline.h2>Join Session</Headline.h2>
             <p className="mb-3">Join an existing pointing poker session by choosing a name for yourself and pressing the button. You will be able to invite your colleagues once your session is set up.</p>
-            <TextField className="mb-3" type="text" name="name" state={ [name, setName] }>Your Name</TextField>
-            <Button.default onClick={ joinRoom }>Jump on it!</Button.default>
+            <FormContainer onSubmit={ joinRoom }>
+                <TextField className="mb-3" type="text" name="name" state={ [name, setName] }>Your Name</TextField>
+                <Button.default onClick={ joinRoom }>Jump on it!</Button.default>
+            </FormContainer>
         </Section>
     )
 }
