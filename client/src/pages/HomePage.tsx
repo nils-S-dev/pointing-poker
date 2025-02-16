@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import Button from "../components/partials/Button";
 import Headline from "../components/partials/Headline";
 import { useNavigate } from "react-router";
