@@ -1,10 +1,23 @@
 {
   "name": "pointing-poker-api",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
+  "version": "1.0.0",
+  "keywords": [
+    "Scrum Poker",
+    "Planning Poker",
+    "Agile",
+    "Scrum",
+    "React",
+    "NestJS",
+    "Socket.io",
+    "Docker",
+    "Realtime",
+    "Web Application",
+    "Collaboration Tool",
+    "Estimation",
+    "Containerization"
+  ],
+  "description": "a simple scrum poker implementation with Nest.js and React.js.",
+  "author": "Nils Siemsen",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
