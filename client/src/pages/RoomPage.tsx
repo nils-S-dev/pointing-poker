@@ -120,7 +120,7 @@ function RoomPage() {
                                         && <Section className="w-full fixed bottom-0 left-0 py-6 shadow-2xl bg-steel px-4 mx-auto md:py-0 md:px-0 md:static md:shadow-none md:bg-transparent">
                                                 {
                                                     procedure.name === textProcedure.name
-                                                        ? <div className="w-full h-48 flex items-center justify-center"><Input className="w-full px-4 mx-auto md:max-w-none md:px-0" onClick={ estimate } /></div>
+                                                        ? <div className="w-full h-48 flex items-center justify-center lg:h-auto"><Input className="w-full px-4 mx-auto md:max-w-none md:px-0" onClick={ estimate } /></div>
                                                         : <Options className="w-80 px-4 mx-auto md:w-full md:px-0" estimation={ user.estimation } onClick={ estimate } options={ procedure.options } />
                                                 }
                                             </Section>
